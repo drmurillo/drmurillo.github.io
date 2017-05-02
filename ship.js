@@ -37,14 +37,20 @@ function Ship() {
     this.pos.add(this.vel);
   };
   this.edges = function() {
-    if (this.pos.x > width) {
-      this.pos.x = width - width;
-    } else if (this.pos.x < 0) {
-      this.pos.x = width;
-    } else if (this.pos.y > height) {
-      this.pos.y = height - height;
-    } else if (this.pos.y < 0) {
-      this.pos.y = height;
+    var left = width - width;
+    var right = width;
+    var top = height - height;
+    var bottom = height;
+    //Screenwrap
+    if (this.pos.x - this.r > right) {
+      this.pos.x = left - this.r;
+    } else if (this.pos.x + this.r < left) {
+      this.pos.x = right + this.r;
+    }
+    if (this.pos.y - this.r > bottom) {
+      this.pos.y = top - this.r;
+    } else if (this.pos.y < top - this.r) {
+      this.pos.y = bottom + this.r;
     }
   };
 }
