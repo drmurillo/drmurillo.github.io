@@ -1,3 +1,13 @@
+//Known issues: Ship turn at Line 70 still isn't working with a variable name
+//Lazers array isn't removing lasers unless it connects with an asteroid. Resulting in infinite array size given enough time
+//Hit detection for asteroids is based on their size. Line 34 has debugging for seeing the actual hitbox. Need to adjust.
+
+//TO DO
+//Add score!
+//Add death animation
+//Add lives
+//Add game over screen when you run out of lives
+
 var ship;
 
 var asteroids = [];
