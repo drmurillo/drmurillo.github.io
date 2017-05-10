@@ -18,6 +18,44 @@ function Ship() {
   this.vel = createVector(0, 0);
   this.heading = 0;
 
+  this.deathTime = 0;
+  this.isAlive = true;
+
+  this.isDead = function() {
+    if (this.isAlive == false) {
+      return true;
+    } else if (this.isAlive == true) {
+      return false;
+    }
+  };
+
+  this.deathAnimation = function() {
+    //Sets the amount of time the death animation will play.
+    //Higher number = longer time
+    var deathLength = 60;
+    if (this.deathTime == deathLength) {
+      this.isAlive = true;
+      this.deathTime = 0;
+    } else {
+      this.isAlive = false;
+      push();
+      translate(this.pos.x, this.pos.y);
+      this.heading++;
+      rotate(this.heading + PI / 2);
+      stroke(255);
+      beginShape();
+      fill(0);
+      vertex(this.frontShip.x, this.frontShip.y);
+      vertex(this.bLeftShip.x, this.bLeftShip.y);
+      vertex(this.backShip.x, this.backShip.y);
+      vertex(this.bRightShip.x, this.bRightShip.y);
+      endShape(CLOSE);
+      pop();
+      this.deathTime++;
+    }
+
+  };
+
   this.show = function() {
     push();
     translate(this.pos.x, this.pos.y);
@@ -34,7 +72,7 @@ function Ship() {
   };
   this.boost = function() {
     //Controls how fast the ship moves. Higher value = more boost
-    var speedControl = 0.80;
+    var speedControl = 0.85;
     //Creates a vector that points in the direction of the ship
     var force = p5.Vector.fromAngle(this.heading);
     this.vel.add(force);
@@ -48,7 +86,7 @@ function Ship() {
   this.move = function() {
     this.pos.add(this.vel);
     //Reduces the speed of the ship over time. Higher value = more reduction
-    this.vel.mult(0.98);
+    //this.vel.mult(0.98);
   };
 
   this.hits = function(asteroid) {
@@ -113,16 +151,10 @@ function Lazer(shipPos, shipHeading) {
   //Function to remove lazers out of the array when they go offscreen
   //Currently not being used due to errors
   this.offscreen = function() {
-    //Refers to the sides of the screen
-    var left = width - width;
-    var right = width;
-    var top = height - height;
-    var bottom = height;
-
-    if (this.pos.x > right || this.pos.x < left) {
+    if (this.pos.x > width || this.pos.x < 0) {
       return true;
     }
-    if (this.pos.y > bottom || this.pos.y < top) {
+    if (this.pos.y > height || this.pos.y < 0) {
       return true;
     }
     return false;
