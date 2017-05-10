@@ -1,10 +1,8 @@
 //Known issues: Ship turn at Line 70 still isn't working with a variable name
-//Lazers array isn't removing lasers unless it connects with an asteroid. Resulting in infinite array size given enough time
 //Hit detection for asteroids is based on their size. Line 34 has debugging for seeing the actual hitbox. Need to adjust.
 
 //TO DO
 //Add score!
-//Add death animation
 //Add lives
 //Add game over screen when you run out of lives
 
@@ -41,49 +39,60 @@ function draw() {
     asteroids[i].edges();
     //Death check
     if (ship.hits(asteroids[i])) {
-      console.log('oops! :(');
+      ship.isAlive = false;
+      //Minus 1 life
     }
   }
   for (i = lazers.length - 1; i >= 0; i--) {
     lazers[i].show();
     lazers[i].move();
-    //lazers[i].edges();
-    for (j = asteroids.length - 1; j >= 0; j--) {
-      if (lazers[i].hits(asteroids[j])) {
-        if (asteroids[j].asteroidSize > asteroidMinSize) {
-          //Create two new asteroids as an array and copies them
-          var newAsteroid = asteroids[j].breakup();
-          //Join the newAsteroid array with asteroids array
-          asteroids = asteroids.concat(newAsteroid);
-          //Increase Score!
+    if (lazers[i].offscreen()) {
+      lazers.splice(i, 1);
+    } else {
+      for (j = asteroids.length - 1; j >= 0; j--) {
+        if (lazers[i].hits(asteroids[j])) {
+          if (asteroids[j].asteroidSize > asteroidMinSize) {
+            //Create two new asteroids as an array and copies them
+            var newAsteroid = asteroids[j].breakup();
+            //Join the newAsteroid array with asteroids array
+            asteroids = asteroids.concat(newAsteroid);
+            //Increase Score!
+          }
+          //Remove the asteroid that got hit
+          asteroids.splice(j, 1);
+          //Remove the lazer that hit the asteroid
+          lazers.splice(i, 1);
+          break;
         }
-        //Remove the asteroid that got hit
-        asteroids.splice(j, 1);
-        //Remove the lazer that hit the asteroid
-        lazers.splice(i, 1);
-        break;
       }
     }
   }
-  ship.show();
-  ship.move();
-  ship.edges();
-
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(turnLeft)) {
+  if (ship.isDead() == false) {
+    ship.show();
+    ship.move();
+    ship.edges();
+  } else if (ship.isDead() == true) {
+    ship.deathAnimation();
+    //At the end of the death animation, ship.isAlive is set to true
+    if (ship.isAlive == true) {
+      ship = new Ship();
+    }
+  }
+  if (ship.isDead() == false && keyIsDown(LEFT_ARROW) || keyIsDown(turnLeft)) {
     //Determines how quickly the ship turns. Higher value = faster turn
     var turnRate = 0.08;
     ship.turn(turnRate * -1);
-  } else if (keyIsDown(RIGHT_ARROW) || keyIsDown(turnRight)) {
+  } else if (ship.isDead() == false && keyIsDown(RIGHT_ARROW) || keyIsDown(turnRight)) {
     //bug: can't pass 'turnRate' in without breaking
     ship.turn(0.08);
   }
-  if (keyIsDown(UP_ARROW) || keyIsDown(moveForward)) {
+  if (ship.isDead() == false && keyIsDown(UP_ARROW) || keyIsDown(moveForward)) {
     ship.boost();
   }
 }
 
 function keyPressed() {
-  if (keyCode == spaceBar) {
+  if (keyCode == spaceBar && ship.isDead() == false) {
     lazers.push(new Lazer(ship.pos, ship.heading));
   }
 }
