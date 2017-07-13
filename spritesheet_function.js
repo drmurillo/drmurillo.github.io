@@ -31,7 +31,7 @@ function setup() {
   //Higher value = slower speed.
   //example: a value of 4 = 15 fps
   var fps = 60;
-  frameSpeed = 2.5;
+  frameSpeed = 4;
   counter = 0;
   x = 0;
   y = 0;
@@ -51,8 +51,6 @@ function draw() {
       currentFrame = 0;
     }
   }
-  console.log('col: ' + col);
-  console.log('row: ' + row);
   image(img, x, y, frameWidth, frameHeight, row * frameWidth, col * frameHeight, frameWidth, frameHeight);
 }
 
