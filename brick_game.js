@@ -54,7 +54,7 @@ function draw() {
   //var mouseBrickCol = Math.floor(mouseX / brickW);
   //var mouseBrickRow = Math.floor(mouseY / brickH);
   //var brickIndexUnderMouse = ColrowToArrayIndex(grid, mouseBrickCol, mouseBrickRow);
-    //text(mouseBrickCol + ',' + mouseBrickRow + ':' + brickIndexUnderMouse, mouseX, mouseY, 'yellow');
+  //text(mouseBrickCol + ',' + mouseBrickRow + ':' + brickIndexUnderMouse, mouseX, mouseY, 'yellow');
   ball.show();
   ball.update();
   paddle.show();
@@ -199,7 +199,8 @@ function Ball(x, y, img) {
     if (this.y + this.radius >= object.y &&
       this.y - this.radius <= object.y + object.height &&
       this.x + this.radius >= object.x &&
-      this.x - this.radius <= object.x + object.width) {
+      this.x - this.radius <= object.x + object.width &&
+      this.ySpeed > 0) {
       var objectCenter = object.x + object.width / 2;
       var ballDistFromCenter = this.x - objectCenter;
       this.angleChange(ballDistFromCenter);
