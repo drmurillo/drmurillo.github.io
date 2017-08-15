@@ -11,7 +11,7 @@ var originalDataLength;
 var start;
 var reset;
 
-const WIDTH = 10;
+const WIDTH = 4;
 
 function startSorting() {
   if (data.length != 0) {
